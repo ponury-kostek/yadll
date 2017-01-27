@@ -6,34 +6,15 @@ const Node = require('./Node');
 /**
  *
  * @param {List} list
- * @returns {Node|null}
- */
-function pop(list) {
-	return cut(list.tail);
-}
-/**
- *
- * @param {List} list
- * @returns {Node|null}
- */
-function shift(list) {
-	return cut(list.head);
-}
-/**
- *
- * @param {List} list
- * @param {Node|*} node
+ * @param {Node} node
  * @return {Node}
  */
 function push(list, node) {
-	if (!(node instanceof Node)) {
-		node = new Node(node);
-	}
 	if (list.tail === node) {
 		return node;
 	}
 	if (node.list !== null) {
-		list.cut(node);
+		cut(node);
 	}
 	node.list = list;
 	const tail = list.tail;
@@ -51,18 +32,15 @@ function push(list, node) {
 /**
  *
  * @param {List} list
- * @param {Node|*} node
+ * @param {Node} node
  * @return {Node}
  */
 function unshift(list, node) {
-	if (!(node instanceof Node)) {
-		node = new Node(node);
-	}
 	if (list.head === node) {
 		return node;
 	}
 	if (node.list !== null) {
-		list.cut(node);
+		cut(node);
 	}
 	node.list = list;
 	const head = list.head;
@@ -76,6 +54,48 @@ function unshift(list, node) {
 	}
 	list.length++;
 	return node;
+}
+/**
+ *
+ * @param {List} list
+ * @param {Node} node
+ * @param {Node} newNode
+ * @returns {Node|Boolean}
+ */
+function insertAfter(list, node, newNode) {
+	if (!(node instanceof Node) || node.list !== list) {
+		return false;
+	}
+	const next = node.next;
+	if (next === null) {
+		return push(list, newNode);
+	}
+	node.next = newNode;
+	newNode.prev = node;
+	newNode.next = next;
+	next.prev = newNode;
+	return newNode;
+}
+/**
+ *
+ * @param {List} list
+ * @param {Node} node
+ * @param {Node} newNode
+ * @returns {Node|Boolean}
+ */
+function insertBefore(list, node, newNode) {
+	if (!(node instanceof Node) || node.list !== list) {
+		return false;
+	}
+	const prev = node.prev;
+	if (prev === null) {
+		return unshift(list, newNode);
+	}
+	node.prev = newNode;
+	newNode.next = node;
+	newNode.prev = prev;
+	prev.next = newNode;
+	return newNode;
 }
 /**
  *
@@ -107,27 +127,14 @@ function cut(node) {
 }
 /**
  *
- * @param {List} list
- * @param {Function.<Node>} callback
- */
-function forEach(list, callback) {
-	iterate(list.head, false, callback);
-}
-/**
- *
- * @param {List} list
- * @param {Function.<Node>} callback
- */
-function forEachReverse(list, callback) {
-	iterate(list.tail, true, callback);
-}
-/**
- *
  * @param {Node} start
  * @param {Boolean} backward
  * @param {Function.<Node>} callback
  */
 function iterate(start, backward, callback) {
+	if (start === null) {
+		return;
+	}
 	let node = start;
 	const next = backward ? 'prev' : 'next';
 	while (node !== null) {
@@ -164,13 +171,16 @@ List.prototype.createNode = function (value) {
  * @return {Node|null}
  */
 List.prototype.pop = function () {
-	return pop(this);
+	return cut(this.tail);
 };
 /**
  *
  * @param {*} node
  */
 List.prototype.push = function (node) {
+	if (!(node instanceof Node)) {
+		node = new Node(node);
+	}
 	return push(this, node);
 };
 /**
@@ -178,14 +188,41 @@ List.prototype.push = function (node) {
  * @return {*}
  */
 List.prototype.shift = function () {
-	return shift(this);
+	return cut(this.head);
 };
 /**
  *
  * @param node
  */
 List.prototype.unshift = function (node) {
+	if (!(node instanceof Node)) {
+		node = new Node(node);
+	}
 	return unshift(this, node);
+};
+/**
+ *
+ * @param {Node} node
+ * @param {Node} newNode
+ * @returns {Node|Boolean}
+ */
+List.prototype.insertAfter = function (node, newNode) {
+	if (!(newNode instanceof Node)) {
+		newNode = new Node(newNode);
+	}
+	return insertAfter(this, node, newNode);
+};
+/**
+ *
+ * @param {Node} node
+ * @param {Node} newNode
+ * @returns {Node|Boolean}
+ */
+List.prototype.insertBefore = function (node, newNode) {
+	if (!(newNode instanceof Node)) {
+		newNode = new Node(newNode);
+	}
+	return insertBefore(this, node, newNode);
 };
 /**
  *
@@ -200,19 +237,16 @@ List.prototype.cut = function (node) {
  * @param {Function.<Node>} callback
  */
 List.prototype.forEach = function (callback) {
-	forEach(this, callback);
+	iterate(this.head, false, callback);
 };
 /**
  *
  * @param {Function.<Node>} callback
  */
 List.prototype.forEachReverse = function (callback) {
-	forEachReverse(this, callback);
+	iterate(this.tail, true, callback);
 };
 List.prototype.clear = function () {
-	/*this.forEach((node) => {
-		node.destroy();
-	});*/
 	this.length = 0;
 	this.head = null;
 	this.tail = null;
