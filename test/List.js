@@ -262,9 +262,19 @@ describe('List', () => {
 		});
 		it('drain', () => {
 			const list = new List();
-			list.push(1);
-			const node = list.pop();
-			assert.strictEqual(node.value, 1);
+			const first = list.push(1);
+			assert.strictEqual(list.length, 1);
+			assert.strictEqual(list.head, first);
+			assert.strictEqual(list.tail, first);
+			const second = list.unshift(2);
+			assert.strictEqual(list.length, 2);
+			assert.strictEqual(list.head, second);
+			assert.strictEqual(list.tail, first);
+			assert.deepEqual(list.pop(), first);
+			assert.strictEqual(list.length, 1);
+			assert.strictEqual(list.head, second);
+			assert.strictEqual(list.tail, second);
+			assert.deepEqual(list.pop(), second);
 			assert.strictEqual(list.length, 0);
 			assert.strictEqual(list.head, null);
 			assert.strictEqual(list.tail, null);
@@ -279,13 +289,121 @@ describe('List', () => {
 		});
 		it('drain', () => {
 			const list = new List();
-			list.push(1);
-			const node = list.shift();
-			assert.strictEqual(node.value, 1);
+			const first = list.push(1);
+			assert.strictEqual(list.length, 1);
+			assert.strictEqual(list.head, first);
+			assert.strictEqual(list.tail, first);
+			const second = list.unshift(2);
+			assert.strictEqual(list.length, 2);
+			assert.strictEqual(list.head, second);
+			assert.strictEqual(list.tail, first);
+			assert.deepEqual(list.shift(), second);
+			assert.strictEqual(list.length, 1);
+			assert.strictEqual(list.head, first);
+			assert.strictEqual(list.tail, first);
+			assert.deepEqual(list.shift(), first);
 			assert.strictEqual(list.length, 0);
 			assert.strictEqual(list.head, null);
 			assert.strictEqual(list.tail, null);
 		});
+	});
+	describe('insertBefore', () => {
+		it('direction', () => {
+			const list = new List();
+			const first = list.unshift(1);
+			assert.strictEqual(list.length, 1, 'length == 1');
+			assert.strictEqual(list.head.value, 1, 'head.value == 1');
+			assert.strictEqual(list.tail.value, 1, 'tail.value == 1');
+			const second = list.insertBefore(first, 2);
+			assert.strictEqual(list.length, 2, 'length == 2');
+			assert.strictEqual(list.head.value, 2, 'head.value == 2');
+			assert.strictEqual(list.tail.value, 1, 'tail.value == 1');
+			const third = list.insertBefore(second, 3);
+			assert.strictEqual(list.length, 3, 'length == 3');
+			assert.strictEqual(list.head.value, 3, 'head.value == 3');
+			assert.strictEqual(list.tail.value, 1, 'tail.value == 1');
+			assert.strictEqual(list.tail.prev, list.head.next, 'tail.prev == head.next');
+		});
+		/*
+		it('"Node" items', () => {
+			const values = [
+				null,
+				undefined,
+				false,
+				true,
+				0,
+				1,
+				2.3,
+				'text',
+				[
+					1,
+					2
+				],
+				{a : 'b'}
+			];
+			const length = values.length;
+			const list = new List();
+			for (var i = 0; i < length; i++) {
+				const value = list.createNode(values[i]);
+				const node = list.unshift(value);
+				assert.strictEqual(node, value);
+				assert.strictEqual(node.value, values[i]);
+			}
+			assert.equal(list.length, length);
+		});
+		it('tail', () => {
+			const list = new List();
+			const head = list.unshift();
+			list.unshift(head);
+			assert.strictEqual(list.length, 1);
+			assert.strictEqual(list.head, head);
+		});
+		it('head', () => {
+			const list = new List();
+			list.unshift(1);
+			list.unshift(2);
+			const tail = list.tail.value;
+			list.unshift(list.tail);
+			assert.strictEqual(list.length, 2);
+			assert.strictEqual(list.head.value, tail);
+		});
+		it('from middle', () => {
+			const list = new List();
+			const nodes = [];
+			for (var i = 0; i < 5; i++) {
+				nodes.push(list.push(i));
+			}
+			list.unshift(nodes[2]);
+			assert.strictEqual(list.length, 5);
+			assert.strictEqual(list.head, nodes[2]);
+			assert.strictEqual(nodes[1].next, nodes[3]);
+			assert.strictEqual(nodes[1], nodes[3].prev);
+		});
+		it('in correct order', () => {
+			const values = [
+				null,
+				undefined,
+				false,
+				true,
+				0,
+				1,
+				2.3,
+				'text',
+				[
+					1,
+					2
+				],
+				{a : 'b'}
+			];
+			const length = values.length;
+			const list = new List();
+			const nodes = [];
+			for (var i = 0; i < length; i++) {
+				const value = list.createNode(values[i]);
+				nodes.unshift(list.unshift(value));
+			}
+			assert.equal(list.length, length);
+		});*/
 	});
 	it('forEach', () => {
 		const list = new List();
