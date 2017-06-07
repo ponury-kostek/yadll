@@ -21,6 +21,16 @@ suite.add('Yadll.push', function () {
 	for (var i = 0; i < 1000; i++) {
 		dll.unshift(i);
 	}
+}).add('Array.push', function () {
+	const dll = [];
+	for (var i = 0; i < 1000; i++) {
+		dll.push(i);
+	}
+}).add('Array.unshift', function () {
+	const dll = [];
+	for (var i = 0; i < 1000; i++) {
+		dll.unshift(i);
+	}
 }).add('Yadll.forEach', function () {
 	dll.forEach(iter);
 }).add('Yadll.forEachReverse', function () {
