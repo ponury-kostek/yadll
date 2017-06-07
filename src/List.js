@@ -129,9 +129,9 @@ function cut(node) {
  *
  * @param {Node} start
  * @param {Boolean} backward
- * @param {Function.<Node>} callback
+ * @param {Function.<Node>} iterator
  */
-function iterate(start, backward, callback) {
+function iterate(start, backward, iterator) {
 	if (start === null) {
 		return;
 	}
@@ -140,7 +140,7 @@ function iterate(start, backward, callback) {
 	while (node !== null) {
 		const current = node;
 		node = node[next];
-		callback(current);
+		iterator(current);
 	}
 }
 /**
