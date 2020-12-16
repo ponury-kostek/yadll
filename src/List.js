@@ -75,6 +75,7 @@ function insertAfter(list, node, newNode) {
 	newNode.prev = node;
 	newNode.next = next;
 	next.prev = newNode;
+	list.length++;
 	return newNode;
 }
 /**
@@ -97,6 +98,7 @@ function insertBefore(list, node, newNode) {
 	newNode.next = node;
 	newNode.prev = prev;
 	prev.next = newNode;
+	list.length++;
 	return newNode;
 }
 /**
