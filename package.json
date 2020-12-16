@@ -1,6 +1,6 @@
 {
   "name": "yadll",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Yet Another Doubly Linked List",
   "main": "index.js",
   "scripts": {
