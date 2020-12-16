@@ -70,6 +70,7 @@ function insertAfter(list, node, newNode) {
 	if (next === null) {
 		return push(list, newNode);
 	}
+	newNode.list = list;
 	node.next = newNode;
 	newNode.prev = node;
 	newNode.next = next;
@@ -91,6 +92,7 @@ function insertBefore(list, node, newNode) {
 	if (prev === null) {
 		return unshift(list, newNode);
 	}
+	newNode.list = list;
 	node.prev = newNode;
 	newNode.next = node;
 	newNode.prev = prev;
